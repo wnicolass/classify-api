@@ -11,6 +11,11 @@
   },
   "rules": {
     "no-console": "off",
-    "import/no-named-default": "off"
+    "import/no-named-default": "off",
+    "func-names": "off",
+    "no-underscore-dangle": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-unused-vars": "off",
+    "import/first": "off"
   }
 }
