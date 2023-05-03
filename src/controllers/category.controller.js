@@ -72,7 +72,7 @@ export default (function homeController() {
 
         if (!Object.keys(req.body).length) {
           return res.status(400).json({
-            error: 'No data to updated',
+            error: 'No data to update',
           });
         }
 
