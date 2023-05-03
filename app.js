@@ -8,6 +8,7 @@ import homeRoutes from './src/routes/home.routes';
 import tokenRoutes from './src/routes/token.routes';
 import userRoutes from './src/routes/user.routes';
 import adRoutes from './src/routes/ad.routes';
+import categoryRoutes from './src/routes/category.routes';
 import errorHandler from './src/middlewares/errorHandler';
 import enableCors from './src/middlewares/enableCors';
 
@@ -25,6 +26,7 @@ export default (function app() {
       myApp.use('/token', tokenRoutes);
       myApp.use('/users', userRoutes);
       myApp.use('/ads', adRoutes);
+      myApp.use('/categories', categoryRoutes);
       myApp.use(errorHandler);
     }()),
   };
