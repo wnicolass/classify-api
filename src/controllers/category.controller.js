@@ -1,6 +1,6 @@
 import models from '../database';
 
-export default (function homeController() {
+export default (function categoryController() {
   return {
     async store(req, res, next) {
       try {
