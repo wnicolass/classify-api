@@ -24,10 +24,26 @@ export default (function adController() {
           });
         }
 
+        const adStatus = getKeyByValue(AdStatusEnum, +statusId);
+
+        if (!adStatus) {
+          return res.status(404).json({
+            error: `Status with id ${statusId} does not exist`,
+          });
+        }
+
+        const adsByStatus = await models.Ad.findAll({
+          where: { status_id: statusId },
+        });
+
+        if (!adsByStatus.length) {
+          return res.status(404).json({
+            error: `No ads found with id ${statusId}`,
+          });
+        }
+
         return res.status(200).json({
-          ads: await models.Ad.findAll({
-            where: { status_id: statusId },
-          }),
+          ads: adsByStatus,
         });
       } catch (err) {
         return next(err);
