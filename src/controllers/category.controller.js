@@ -15,6 +15,15 @@ export default (function homeController() {
           });
         }
 
+        const categoryAlreadyExists = await models.Category.findOne({
+          where: { category_name: categoryName },
+        });
+        if (categoryAlreadyExists) {
+          return res.status(400).json({
+            error: `Category with name '${categoryName} already exists'`,
+          });
+        }
+
         await models.Category.create(req.body);
         return res.status(201).json({
           msg: 'Category created successfully',
