@@ -9,12 +9,14 @@ import tokenRoutes from './src/routes/token.routes';
 import userRoutes from './src/routes/user.routes';
 import adRoutes from './src/routes/ad.routes';
 import errorHandler from './src/middlewares/errorHandler';
+import enableCors from './src/middlewares/enableCors';
 
 export default (function app() {
   const myApp = express();
   return {
     app: myApp,
     middlewares: (function middlewares() {
+      myApp.use(enableCors);
       myApp.use(express.urlencoded({ extended: true }));
       myApp.use(express.json());
     }()),
