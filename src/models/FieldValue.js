@@ -1,6 +1,6 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
 
-module.exports = function (sequelize, DataTypes) {
+export default function (sequelize, DataTypes) {
   return sequelize.define('FieldValue', {
     field_definition_id: {
       type: DataTypes.INTEGER,
@@ -47,4 +47,4 @@ module.exports = function (sequelize, DataTypes) {
       },
     ],
   });
-};
+}

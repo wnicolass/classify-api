@@ -1,6 +1,6 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
 
-module.exports = function (sequelize, DataTypes) {
+export default function (sequelize, DataTypes) {
   return sequelize.define('OpenIdConnectTokens', {
     state: {
       type: DataTypes.STRING(256),
@@ -26,4 +26,4 @@ module.exports = function (sequelize, DataTypes) {
       },
     ],
   });
-};
+}
