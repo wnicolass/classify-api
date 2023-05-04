@@ -1,4 +1,5 @@
 import models from '../database';
+import { categoryRelatedData } from '../utils/common';
 
 export default (function categoryController() {
   return {
@@ -36,7 +37,7 @@ export default (function categoryController() {
     async index(req, res, next) {
       try {
         return res.status(200).json({
-          categories: await models.Category.findAll(),
+          categories: await models.Category.findAll(categoryRelatedData),
         });
       } catch (err) {
         return next(err);
@@ -53,7 +54,7 @@ export default (function categoryController() {
           });
         }
 
-        const category = await models.Category.findByPk(id);
+        const category = await models.Category.findByPk(id, categoryRelatedData);
 
         if (!category) {
           return res.status(404).json({

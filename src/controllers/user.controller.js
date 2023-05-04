@@ -1,11 +1,12 @@
 import models from '../database';
+import { userRelatedData } from '../utils/common';
 
 export default (function userController() {
   return {
     async index(req, res, next) {
       try {
         return res.status(200).json({
-          users: await models.UserAccount.findAll(),
+          users: await models.UserAccount.findAll(userRelatedData),
         });
       } catch (err) {
         return next(err);
@@ -16,7 +17,7 @@ export default (function userController() {
       try {
         const { id } = req.params;
 
-        const user = await models.UserAccount.findByPk(id);
+        const user = await models.UserAccount.findByPk(id, userRelatedData);
 
         if (!user) {
           return res.status(404).json({

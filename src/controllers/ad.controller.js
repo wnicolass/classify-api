@@ -1,13 +1,13 @@
 import models from '../database';
 import { default as AdStatusEnum } from '../utils/enums';
-import getKeyByValue from '../utils/common';
+import { getKeyByValue, adRelatedData } from '../utils/common';
 
 export default (function adController() {
   return {
     async index(req, res, next) {
       try {
         return res.status(200).json({
-          ads: await models.Ad.findAll(),
+          ads: await models.Ad.findAll(adRelatedData),
         });
       } catch (err) {
         return next(err);
@@ -32,8 +32,10 @@ export default (function adController() {
           });
         }
 
+        const { include } = adRelatedData;
         const adsByStatus = await models.Ad.findAll({
           where: { status_id: statusId },
+          include,
         });
 
         if (!adsByStatus.length) {
@@ -54,7 +56,7 @@ export default (function adController() {
       try {
         const { id } = req.params;
 
-        const ad = await models.Ad.findByPk(id);
+        const ad = await models.Ad.findByPk(id, adRelatedData);
 
         if (!ad) {
           return res.status(404).json({
