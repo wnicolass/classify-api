@@ -1,4 +1,5 @@
 import models from '../database';
+import { subcategoryRelatedData } from '../utils/common';
 
 export default (function subcategoryController() {
   return {
@@ -43,8 +44,12 @@ export default (function subcategoryController() {
 
     async index(req, res, next) {
       try {
+        const { include } = subcategoryRelatedData;
         return res.status(200).json({
-          subcategories: await models.Subcategory.findAll(),
+          subcategories: await models.Subcategory.findAll({
+            attributes: ['id', 'subcategory_name'],
+            include,
+          }),
         });
       } catch (err) {
         return next(err);
@@ -61,7 +66,14 @@ export default (function subcategoryController() {
           });
         }
 
-        const subcategory = await models.Subcategory.findByPk(id);
+        const { include } = subcategoryRelatedData;
+        const subcategory = await models.Subcategory.findByPk(
+          id,
+          {
+            attributes: ['id', 'subcategory_name'],
+            include,
+          },
+        );
 
         if (!subcategory) {
           return res.status(404).json({
@@ -134,7 +146,7 @@ export default (function subcategoryController() {
           });
         }
 
-        const subcategory = await models.Subcategory.findByPk(id);
+        const subcategory = await models.Subcategory.findByPk(id, subcategoryRelatedData);
 
         if (!subcategory) {
           return res.status(404).json({
