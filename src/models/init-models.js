@@ -1,31 +1,31 @@
 /* eslint-disable camelcase */
-const { DataTypes } = require('sequelize');
-const _Ad = require('./Ad');
-const _AdAddress = require('./AdAddress');
-const _AdApproval = require('./AdApproval');
-const _AdCondition = require('./AdCondition');
-const _AdImage = require('./AdImage');
-const _AdStatus = require('./AdStatus');
-const _AdminAccount = require('./AdminAccount');
-const _Category = require('./Category');
-const _Chatroom = require('./Chatroom');
-const _EmailValidationStatus = require('./EmailValidationStatus');
-const _ExternalProvider = require('./ExternalProvider');
-const _Favourite = require('./Favourite');
-const _FavouriteSearch = require('./FavouriteSearch');
-const _Feature = require('./Feature');
-const _FieldDefinition = require('./FieldDefinition');
-const _FieldValue = require('./FieldValue');
-const _HashAlgo = require('./HashAlgo');
-const _Message = require('./Message');
-const _OpenIdConnectTokens = require('./OpenIdConnectTokens');
-const _Promo = require('./Promo');
-const _Subcategory = require('./Subcategory');
-const _Subcategory_FieldDefinition = require('./Subcategory_FieldDefinition');
-const _UserAccount = require('./UserAccount');
-const _UserAddress = require('./UserAddress');
-const _UserLoginData = require('./UserLoginData');
-const _UserLoginDataExt = require('./UserLoginDataExt');
+import { DataTypes } from 'sequelize';
+import _Ad from './Ad';
+import _AdAddress from './AdAddress';
+import _AdApproval from './AdApproval';
+import _AdCondition from './AdCondition';
+import _AdImage from './AdImage';
+import _AdStatus from './AdStatus';
+import _AdminAccount from './AdminAccount';
+import _Category from './Category';
+import _Chatroom from './Chatroom';
+import _EmailValidationStatus from './EmailValidationStatus';
+import _ExternalProvider from './ExternalProvider';
+import _Favourite from './Favourite';
+import _FavouriteSearch from './FavouriteSearch';
+import _Feature from './Feature';
+import _FieldDefinition from './FieldDefinition';
+import _FieldValue from './FieldValue';
+import _HashAlgo from './HashAlgo';
+import _Message from './Message';
+import _OpenIdConnectTokens from './OpenIdConnectTokens';
+import _Promo from './Promo';
+import _Subcategory from './Subcategory';
+import _Subcategory_FieldDefinition from './Subcategory_FieldDefinition';
+import _UserAccount from './UserAccount';
+import _UserAddress from './UserAddress';
+import _UserLoginData from './UserLoginData';
+import _UserLoginDataExt from './UserLoginDataExt';
 
 function initModels(sequelize) {
   const Ad = _Ad(sequelize, DataTypes);
@@ -162,6 +162,4 @@ function initModels(sequelize) {
     UserLoginDataExt,
   };
 }
-module.exports = initModels;
-module.exports.initModels = initModels;
-module.exports.default = initModels;
+export default initModels;

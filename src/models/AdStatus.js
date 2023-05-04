@@ -1,6 +1,6 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
 
-module.exports = function (sequelize, DataTypes) {
+export default function (sequelize, DataTypes) {
   return sequelize.define('AdStatus', {
     id: {
       autoIncrement: true,
@@ -35,4 +35,4 @@ module.exports = function (sequelize, DataTypes) {
       },
     ],
   });
-};
+}
