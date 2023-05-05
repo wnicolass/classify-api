@@ -53,7 +53,7 @@ export const userRelatedData = {
     {
       model: models.Ad,
       as: 'Ads',
-      attributes: ['id', 'title'],
+      attributes: ['id', 'title', 'promo_id'],
     },
   ],
 };
