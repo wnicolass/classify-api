@@ -119,6 +119,18 @@ export default (function subcategoryController() {
           }
         }
 
+        const {
+          subcategory_name: subcategoryName,
+        } = req.body;
+        const subcategoryAlreadyExists = !!(await models.Subcategory.findOne(
+          { where: { subcategory_name: subcategoryName } },
+        ));
+        if (subcategoryAlreadyExists) {
+          return res.status(400).json({
+            error: `Subcategory with name '${subcategoryName}' already exists`,
+          });
+        }
+
         const subcategory = await models.Subcategory.findByPk(id);
 
         if (!subcategory) {
@@ -129,7 +141,7 @@ export default (function subcategoryController() {
 
         const updatedSubcategory = await subcategory.update(req.body);
         return res.status(200).json({
-          updated_category: updatedSubcategory,
+          updated_subcategory: updatedSubcategory,
         });
       } catch (err) {
         return next(err);
