@@ -11,10 +11,10 @@ import { default as server } from '../app';
 const { app } = server;
 let serverConn = {};
 const TOKEN = process.env.TEST_TOKEN;
-const STATUS_ID = process.env.AD_STATUS;
-const { AD_ID } = process.env;
+const { CATEGORY_ID } = process.env;
+const { SUBCATEGORY_ID } = process.env;
 
-describe('User Workflow', () => {
+describe('JWT Token Workflow', () => {
   beforeAll(() => {
     serverConn = server.app.listen(3000);
   });
@@ -28,10 +28,10 @@ describe('User Workflow', () => {
     admin is logged in.
   */
   it(
-    'should receive unauthorized if don\'t send authorization header',
+    'should receive unauthorized if doesn\'t send authorization header',
     async () => {
       await request(app)
-        .get('/ads/')
+        .get('/subcategories')
         .expect(401)
         .then((res) => {
           expect(res.body).toEqual(expect.objectContaining({
@@ -42,25 +42,10 @@ describe('User Workflow', () => {
   );
 
   it(
-    'should receive array of ads',
+    'should receive bad request if doesn\'t send required data to create subcategory',
     async () => {
       await request(app)
-        .get('/ads/')
-        .set('authorization', TOKEN)
-        .expect(200)
-        .then((res) => {
-          expect(res.body).toEqual(expect.objectContaining({
-            ads: expect.any(Array),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should receive bad request if don\t send status id',
-    async () => {
-      await request(app)
-        .get('/ads/status/')
+        .post('/subcategories')
         .set('authorization', TOKEN)
         .expect(400)
         .then((res) => {
@@ -72,145 +57,14 @@ describe('User Workflow', () => {
   );
 
   it(
-    'should receive not found if status id doesn\'t exist',
+    'should receive bad request if subcategory already exists',
     async () => {
       await request(app)
-        .get('/ads/status/250')
-        .set('authorization', TOKEN)
-        .expect(404)
-        .then((res) => {
-          expect(res.body).toEqual(expect.objectContaining({
-            error: expect.any(String),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should receive array of ads matching the sent status id',
-    async () => {
-      await request(app)
-        .get(`/ads/status/${STATUS_ID}`)
-        .set('authorization', TOKEN)
-        .expect(200)
-        .then((res) => {
-          const adsStatusId = res.body.ads.map((ad) => ad.status_id);
-          adsStatusId.forEach((adStatus) => expect(adStatus).toBe(+STATUS_ID));
-          expect(res.body).toEqual(expect.objectContaining({
-            ads: expect.any(Array),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should receive not found if doesn\'t find ad by id',
-    async () => {
-      await request(app)
-        .get('/ads/250')
-        .set('authorization', TOKEN)
-        .expect(404)
-        .then((res) => {
-          expect(res.body).toEqual(expect.objectContaining({
-            error: expect.any(String),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should receive an ad by id',
-    async () => {
-      await request(app)
-        .get(`/ads/${AD_ID}`)
-        .set('authorization', TOKEN)
-        .expect(200)
-        .then((res) => {
-          const { ad } = res.body;
-          expect(ad.id).toBe(+AD_ID);
-          expect(res.body).toEqual(expect.objectContaining({
-            ad: expect.any(Object),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should receive bad request if no data is sent to update',
-    async () => {
-      await request(app)
-        .put(`/ads/${AD_ID}`)
-        .set('authorization', TOKEN)
-        .expect(400)
-        .then((res) => {
-          expect(res.body).toEqual(expect.objectContaining({
-            error: expect.any(String),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should receive not found if doesn\'t find ad to update',
-    async () => {
-      await request(app)
-        .put('/ads/250')
+        .post('/subcategories')
         .set('authorization', TOKEN)
         .send({
-          ad_description: 'haha',
-        })
-        .expect(404)
-        .then((res) => {
-          expect(res.body).toEqual(expect.objectContaining({
-            error: expect.any(String),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should update ad and receive updated ad as response',
-    async () => {
-      await request(app)
-        .put(`/ads/${AD_ID}`)
-        .set('authorization', TOKEN)
-        .send({
-          ad_description: 'haha',
-        })
-        .expect(200)
-        .then((res) => {
-          expect(res.body).toEqual(expect.objectContaining({
-            id: expect.any(Number),
-            title: expect.any(String),
-            ad_description: expect.any(String),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should receive bad request if doesn\'t send new status id',
-    async () => {
-      await request(app)
-        .patch(`/ads/${AD_ID}`)
-        .set('authorization', TOKEN)
-        .expect(400)
-        .then((res) => {
-          expect(res.body).toEqual(expect.objectContaining({
-            error: expect.any(String),
-          }));
-        });
-    },
-  );
-
-  it(
-    'should receive bad request if status id doesn\'t exist',
-    async () => {
-      await request(app)
-        .patch(`/ads/${AD_ID}`)
-        .set('authorization', TOKEN)
-        .send({
-          status_id: 365,
+          subcategory_name: 'Periféricos',
+          category_id: CATEGORY_ID,
         })
         .expect(400)
         .then((res) => {
@@ -222,13 +76,14 @@ describe('User Workflow', () => {
   );
 
   it(
-    'should receive not found if ad isn\'t found by sent id',
+    'should receive not found if category id sent doesn\'t exist',
     async () => {
       await request(app)
-        .patch('/ads/250')
+        .post('/subcategories')
         .set('authorization', TOKEN)
         .send({
-          status_id: 2,
+          subcategory_name: 'Test',
+          category_id: 250,
         })
         .expect(404)
         .then((res) => {
@@ -240,15 +95,20 @@ describe('User Workflow', () => {
   );
 
   it(
-    'should receive ok and successfully message',
+    `
+    should create new subcategory
+    and receive successfully message
+     as response
+    `,
     async () => {
       await request(app)
-        .patch(`/ads/${AD_ID}`)
+        .post('/subcategories')
         .set('authorization', TOKEN)
         .send({
-          status_id: 1,
+          subcategory_name: 'Test Subcategory',
+          category_id: CATEGORY_ID,
         })
-        .expect(200)
+        .expect(201)
         .then((res) => {
           expect(res.body).toEqual(expect.objectContaining({
             msg: expect.any(String),
@@ -258,10 +118,32 @@ describe('User Workflow', () => {
   );
 
   it(
-    'should receive not found if doesn\'t find ad to delete',
+    'should receive array of subcategories',
     async () => {
       await request(app)
-        .delete('/ads/250')
+        .get('/subcategories')
+        .set('authorization', TOKEN)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toMatchObject({
+            subcategories: expect.arrayContaining([{
+              id: expect.any(Number),
+              subcategory_name: expect.any(String),
+              category: expect.objectContaining({
+                id: expect.any(Number),
+                category_name: expect.any(String),
+              }),
+            }]),
+          });
+        });
+    },
+  );
+
+  it(
+    'should receive not found if doesn\'t find subcategory by sent id',
+    async () => {
+      await request(app)
+        .get('/subcategories/250')
         .set('authorization', TOKEN)
         .expect(404)
         .then((res) => {
@@ -273,10 +155,180 @@ describe('User Workflow', () => {
   );
 
   it(
-    'should delete ad and receive ok and null as response',
+    'should receive a subcategory object',
     async () => {
       await request(app)
-        .delete(`/ads/${AD_ID}`)
+        .get(`/subcategories/${SUBCATEGORY_ID}`)
+        .set('authorization', TOKEN)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            subcategory: expect.any(Object),
+          }));
+        });
+    },
+  );
+
+  it(
+    'should receive bad request if doesn\'t send subcategory id to update',
+    async () => {
+      await request(app)
+        .put('/subcategories/')
+        .set('authorization', TOKEN)
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            error: expect.any(String),
+          }));
+        });
+    },
+  );
+
+  it(
+    `
+      should receive bad request if
+      doesn't send new data to update
+      subcategory
+    `,
+    async () => {
+      await request(app)
+        .put('/subcategories/250')
+        .set('authorization', TOKEN)
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            error: expect.any(String),
+          }));
+        });
+    },
+  );
+
+  it(
+    `
+      should receive bad request if
+      doesn't find category with the
+      given id
+    `,
+    async () => {
+      await request(app)
+        .put('/subcategories/250')
+        .set('authorization', TOKEN)
+        .send({
+          category_id: 250,
+        })
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            error: expect.any(String),
+          }));
+        });
+    },
+  );
+
+  it(
+    `
+      should receive not found if
+      doesn't find subcategory with the
+      given id
+    `,
+    async () => {
+      await request(app)
+        .put('/subcategories/250')
+        .set('authorization', TOKEN)
+        .send({
+          subcategory_name: 'test',
+        })
+        .expect(404)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            error: expect.any(String),
+          }));
+        });
+    },
+  );
+
+  it(
+    'should receive bad request if subcategory already exists',
+    async () => {
+      await request(app)
+        .put(`/subcategories/${SUBCATEGORY_ID}`)
+        .set('authorization', TOKEN)
+        .send({
+          subcategory_name: 'Periféricos',
+        })
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            error: expect.any(String),
+          }));
+        });
+    },
+  );
+
+  it(
+    `
+      should update subcategory
+      and receive updated subcategory
+      object as response
+    `,
+    async () => {
+      await request(app)
+        .put(`/subcategories/${SUBCATEGORY_ID}`)
+        .set('authorization', TOKEN)
+        .send({
+          subcategory_name: 'Imagem',
+        })
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            updated_subcategory: expect.objectContaining({
+              id: expect.any(Number),
+              subcategory_name: expect.any(String),
+              category_id: expect.any(Number),
+            }),
+          }));
+        });
+    },
+  );
+
+  it(
+    'should receive bad request if doesn\'t send subcategory id to delete',
+    async () => {
+      await request(app)
+        .delete('/subcategories/')
+        .set('authorization', TOKEN)
+        .expect(400)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            error: expect.any(String),
+          }));
+        });
+    },
+  );
+
+  it(
+    `
+      should receive not found if doesn't
+      find subcategory to delete with given id
+    `,
+    async () => {
+      await request(app)
+        .delete('/subcategories/250')
+        .set('authorization', TOKEN)
+        .expect(404)
+        .then((res) => {
+          expect(res.body).toEqual(expect.objectContaining({
+            error: expect.any(String),
+          }));
+        });
+    },
+  );
+
+  it(
+    'should delete subcategory and receive null as response',
+    async () => {
+      await request(app)
+        .delete('/subcategories/127')
         .set('authorization', TOKEN)
         .expect(200)
         .then((res) => {

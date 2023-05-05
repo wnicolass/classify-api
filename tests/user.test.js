@@ -19,6 +19,13 @@ describe('User Workflow', () => {
   });
   afterAll(() => serverConn.close());
 
+  /*
+    this test applies to all endpoints, which means that
+    doesn't matter if the http verb used in the request is
+    GET, POST, PUT, PATCH or DELETE. All endpoints are
+    protected by a middleware that checkes if the current
+    admin is logged in.
+  */
   it(
     'should receive unauthorized if don\'t send authorization header',
     async () => {
