@@ -20,6 +20,11 @@ export const adRelatedData = {
       model: models.AdStatus,
       as: 'status',
     },
+    {
+      model: models.AdAddress,
+      as: 'ad_address',
+      attributes: ['country', 'city'],
+    },
   ],
 };
 
