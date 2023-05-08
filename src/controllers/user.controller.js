@@ -36,12 +36,22 @@ export default (function userController() {
       try {
         const { id } = req.params;
 
-        const user = await models.UserAccount.findByPk(id);
+        const user = await models.UserAccount.findByPk(id, userRelatedData);
 
         if (!user) {
           return res.status(404).json({
             error: 'User not found',
           });
+        }
+
+        const { email_addr: userEmail } = req.body;
+
+        if (userEmail) {
+          const userLoginData = (
+            await models.UserLoginData.findByPk(user.user_id)
+          );
+          userLoginData.email_addr = userEmail;
+          userLoginData.save();
         }
 
         const updatedUser = await user.update(req.body);
