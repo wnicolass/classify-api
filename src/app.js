@@ -2,16 +2,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-import './src/database';
+import './database';
 import express from 'express';
-import homeRoutes from './src/routes/home.routes';
-import tokenRoutes from './src/routes/token.routes';
-import userRoutes from './src/routes/user.routes';
-import adRoutes from './src/routes/ad.routes';
-import categoryRoutes from './src/routes/category.routes';
-import subcategoryRoutes from './src/routes/subcategory.routes';
-import errorHandler from './src/middlewares/errorHandler';
-import enableCors from './src/middlewares/enableCors';
+import homeRoutes from './routes/home.routes';
+import tokenRoutes from './routes/token.routes';
+import userRoutes from './routes/user.routes';
+import adRoutes from './routes/ad.routes';
+import categoryRoutes from './routes/category.routes';
+import subcategoryRoutes from './routes/subcategory.routes';
+import errorHandler from './middlewares/errorHandler';
+import enableCors from './middlewares/enableCors';
 
 export default (function app() {
   const myApp = express();
